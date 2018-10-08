@@ -3,6 +3,8 @@
  * Implementation of Luhn's algorithm for the checksum
  */
 
+ /* BUG: 345345235246755, this 15 digit, seemingly AMEX num will not return an output */
+
 #include <stdio.h>
 #include <cs50.h>   // for getting user input easily
 #include <math.h>   // for pows and fmods
@@ -88,13 +90,9 @@ int checksum(long long Num)
 
     /* If the total’s last digit is 0 the number is valid! */
     if (total % 10 == 0)
-    {
         return 1;
-    }
     else
-    {
-        return 0;
-    }
+        return 0;   // single operation if functions dont require curly braces
 }
 
 void categorise(long long Num, int digit_total)
@@ -115,7 +113,8 @@ void categorise(long long Num, int digit_total)
     /* AMEX begins with 34 or 37 */
     else if (first_two_nums[0] == 3)
     {
-        if (first_two_nums[1] == 4 || first_two_nums[1] == 7)
+        if (first_two_nums[1] == 4 ||
+            first_two_nums[1] == 7)
             {
                 printf("AMEX\n");
             }
@@ -123,6 +122,17 @@ void categorise(long long Num, int digit_total)
     /* Mastercard begins with 51, 52, 53, 54, or 55 */
     else if (first_two_nums[0] == 5)
     {
-        printf("MASTERCARD\n");
+        if (first_two_nums[1] == 1 ||
+            first_two_nums[1] == 2 ||
+            first_two_nums[1] == 3 ||
+            first_two_nums[1] == 4 ||
+            first_two_nums[1] == 5)
+            {
+                printf("MASTERCARD\n");
+            }
+    }
+    else
+    {
+        printf("INVALID\n");
     }
 }
